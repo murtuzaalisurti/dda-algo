@@ -5,16 +5,54 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js" integrity="sha512-rCZdHNB0AePry6kAnKAVFMRfWPmUXSo+/vlGtrOUvhsxD0Punm/xWbEh+8vppPIOzKB9xnk42yCRZ5MD/jvvjQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         *{
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        main {
+            padding: 0.5rem 0 2rem 0;
+        }
+        .inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding: 2rem 0 0 2rem;
+        }
+        h1 {
+            padding-top: 2rem;
+            text-align: center;
+        }
+        h3 {
+            padding-bottom: 2rem;
+            text-align: center;
+        }
+        p {
+            margin-top: 2rem;
+        }
     </style>
 </head>
 <body>
-    <script src="three.js"></script>
+    <h1>Digital Differential Analyzer Algorithm Visualizer</h1>
+    <h3>by Murtuzaali Surti</h3>
+    <div class="inputs">
+        <div>
+            <label for="start">Start Coordinate:- </label>
+            <input type="text" id="start" placeholder="start coordinate">
+        </div>
+        <div>
+            <label for="end">End Coordinate:- </label>
+            <input type="text" id="end" placeholder="end coordinate">
+        </div>
+    </div>
+    <p><em><strong>dimensions of the square are 400x400 pixels</strong></em></p>
     <script src="app.js"></script>
 </body>
 </html>

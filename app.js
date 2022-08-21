@@ -1,47 +1,85 @@
 const terminals = {
     start: [0, 0],
-    end: [90, 120]
+    end: [400, 200]
 }
-const coordinates = [];
+let coordinates = [];
+let coor = 0;
+let p5instance;
 
-function dda(terminals) {
-    let dx = terminals.end[0] - terminals.start[0]
-    let dy = terminals.end[1] - terminals.start[1]
-    let len = Math.abs(dx) > Math.abs(dy) ? Math.abs(dx) : Math.abs(dy);
-    let xIncrement = dx/len
-    let yIncrement = dy/len
-    yIncrement
+function run() {
 
-    let X = terminals.start[0]
-    let Y = terminals.start[1]
-    for(let i = 0; i <= len; i++) {
-        // console.log(Math.round(X), Math.round(Y))
-        coordinates.push([Math.round(X), Math.round(Y), 0])
-        X += xIncrement
-        Y += yIncrement
+    function dda(terminals) {
+        coor = 0;
+        let dx = terminals.end[0] - terminals.start[0]
+        let dy = terminals.end[1] - terminals.start[1]
+        let len = Math.abs(dx) > Math.abs(dy) ? Math.abs(dx) : Math.abs(dy);
+    
+        let xIncrement = dx / len
+        let yIncrement = dy / len
+    
+        let X = terminals.start[0]
+        let Y = terminals.start[1]
+        coordinates = [];
+        for (let i = 0; i <= len; i++) {
+            coordinates.push([Math.round(X), Math.round(Y)])
+            X += xIncrement
+            Y += yIncrement
+        }
     }
+
+    dda(terminals)
+
+    const instance = (p) => {
+        p.setup = function() {
+            let canvas = p.createCanvas(400, 400);
+            // canvas.position(10, 10);
+            p.frameRate(60)
+        }
+    
+        p.draw = function() {
+            p.noStroke();
+            p.background(220, 180, 200);
+            p.fill(180, 200, 40);
+            p.strokeWeight(3);
+            p.stroke(180, 100, 240);
+        
+            if (coor < coordinates.length - 1) {
+                p.line(coordinates[0][0], coordinates[0][1], coordinates[coor + 1][0], coordinates[coor + 1][1]);
+                coor++
+            } else {
+                p.line(coordinates[0][0], coordinates[0][1], coordinates[coordinates.length - 1][0], coordinates[coordinates.length - 1][1]);
+            }
+        }
+    }
+    
+    p5instance = new p5(instance)
 }
 
-dda(terminals)
+run()
 
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 500 );
-camera.position.set( 0, 0, 100 );
-camera.lookAt( 0, 0, 0 );
 
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, window.innerHeight );
-renderer.setClearColor(0x000000, 1)
-document.body.appendChild( renderer.domElement );
+document.querySelector("#start").value = `${terminals.start[0]}, ${terminals.start[1]}`;
+document.querySelector("#end").value = `${terminals.end[0]}, ${terminals.end[1]}`;
 
-const material = new THREE.LineBasicMaterial( { color: 0xffffff } );
-const points = [];
-for(let j = 0; j < coordinates.length; j++) {
-    points.push(new THREE.Vector3(coordinates[j][0], coordinates[j][1], coordinates[j][2]))
+function p5RunAgain() {
+    p5instance.remove()
+    run()
 }
-console.log(points)
-const geometry = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(terminals.start[0], terminals.start[1], 0), (new THREE.Vector3(terminals.end[0], terminals.end[1], 0))]);
-const line = new THREE.Line(geometry, material);
 
-scene.add( line );
-renderer.render( scene, camera );
+document.querySelector("#start").addEventListener("change", (e) => {
+    let coordinateStr = e.target.value.split(",")
+    let coordinate = coordinateStr.map((ele) => {
+        return Number(ele.trim())
+    })
+    terminals.start = coordinate
+    p5RunAgain()
+})
+
+document.querySelector("#end").addEventListener("change", (e) => {
+    let coordinateStr = e.target.value.split(",")
+    let coordinate = coordinateStr.map((ele) => {
+        return Number(ele.trim())
+    })
+    terminals.end = coordinate
+    p5RunAgain()
+})
